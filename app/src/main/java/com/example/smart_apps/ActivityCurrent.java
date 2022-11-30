@@ -20,6 +20,7 @@ import com.github.mikephil.charting.charts.CombinedChart;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
@@ -69,39 +70,55 @@ public class ActivityCurrent extends AppCompatActivity {
 //                    Toast.makeText(ActivityCurrent.this, "Phải chọn giờ trước giờ hiện tại !!!", Toast.LENGTH_SHORT).show();
 //                }
 
-                FirebaseDatabase
+                DatabaseReference dbrf =  FirebaseDatabase
                         .getInstance()
-                        .getReference(Common.keyCurrent + "/" + gio)
-                        .addValueEventListener(new ValueEventListener() {
+                        .getReference(Common.keyCurrent + "/" + gio);
+
+                dbrf.addValueEventListener(new ValueEventListener() {
                             @Override
                             public void onDataChange(@NonNull DataSnapshot snapshot) {
                                 // This method is called once with the initial value and again
                                 // whenever data at this location is updated.
-                                List<String> listValue = (ArrayList<String>) snapshot.getValue();
-                                List<String> dataLabels = new ArrayList<>();
 
-                                if (listValue != null) {
-                                    float[] dataValuesFloat = new float[listValue.size()];
+                                try {
+                                    List<String> listValue = (ArrayList<String>) snapshot.getValue();
+                                    List<String> dataLabels = new ArrayList<>();
 
-                                    // convert arraylist string to array float
-                                    for (int j = 0; j < listValue.size(); j++) {
-                                        if (listValue.get(j) == null) {
-                                            dataValuesFloat[j] = 0;
-                                        } else {
-                                            dataValuesFloat[j] = Float.parseFloat(listValue.get(j));
+                                    if (listValue != null) {
+                                        float[] dataValuesFloat = new float[listValue.size()];
+
+                                        // convert arraylist string to array float
+                                        for (int j = 0; j < listValue.size(); j++) {
+                                            if (listValue.get(j) == null) {
+                                                dataValuesFloat[j] = 0;
+                                            } else {
+                                                dataValuesFloat[j] = Float.parseFloat(listValue.get(j));
+                                            }
+                                            dataLabels.add(j + "");
                                         }
-                                        dataLabels.add(j + "");
+
+                                        String text = "Current";
+                                        Common.updateChar(ActivityCurrent.this, dataLabels, dataValuesFloat, mChart, text, "A");
+                                        Log.e(TAG, "onDataChange: " + gio);
+                                    } else {
+                                        // truong hop ni không co data theo gio
+//                                    String text = "Current";
+//                                    dataLabels.add("");
+//                                    float[] dataValuesFloat = new float[1];
+//                                    dataValuesFloat[0] = 0;
+//                                    Common.updateChar(ActivityCurrent.this, dataLabels, dataValuesFloat, mChart, text, "A");
                                     }
+                                } catch (ClassCastException ex) {
+                                    ex.printStackTrace();
 
-                                    String text = "Current";
-                                    Common.updateChar(ActivityCurrent.this, dataLabels, dataValuesFloat, mChart, text, "A");
+                                    Map<String, String> map = (Map<String, String>) snapshot.getValue();
 
-                                } else {
-                                    // truong hop ni không co data theo gio
-                                    String text = "Current";
-                                    float[] dataValuesFloat = new float[0];
-                                    Common.updateChar(ActivityCurrent.this, dataLabels, dataValuesFloat, mChart, text, "A");
+                                    Object[] s = map.keySet().toArray();
+
+                                    Log.i(TAG, "onDataChange: " + s.toString());
+
                                 }
+
                             }
 
                             @Override
