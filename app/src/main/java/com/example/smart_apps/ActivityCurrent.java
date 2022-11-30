@@ -49,92 +49,53 @@ public class ActivityCurrent extends AppCompatActivity {
         fhome.setOnClickListener(view -> startActivity(new Intent(getApplicationContext(), ActivityElectricalHome.class)));
 
         // tao mang
-        String[] values = Common.initValueSpinner();
+        String[] listGios = Common.initValueSpinner();
 
-        ArrayAdapter<String> adapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, values);
+        ArrayAdapter<String> adapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, listGios);
         adapter.setDropDownViewResource(android.R.layout.simple_list_item_single_choice);
 
         spinner.setAdapter(adapter);
         spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
-                String gio = values[i];
+                String gio = listGios[i];
 
-                final List<String> dataLabels = new ArrayList();
-                final List<String> dataValues = new ArrayList<>();
-                final Map<String, String> map = new HashMap<>();
+                FirebaseDatabase
+                        .getInstance()
+                        .getReference(Common.keyCurrent + "/" + gio)
+                        .addValueEventListener(new ValueEventListener() {
+                            @Override
+                            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                                // This method is called once with the initial value and again
+                                // whenever data at this location is updated.
+                                List<String> listValue = (ArrayList<String>) snapshot.getValue();
+                                List<String> dataLabels = new ArrayList<>();
 
-                // lap qua tung phut
-                for (int phut = 0; phut < 60; phut++) {
-                    String key = gio + ":" + (phut < 10 ? "0" : "") + phut;
-                    dataLabels.add((phut < 10 ? "0" : "") + phut);
+                                if (listValue != null) {
+                                    float[] dataValuesFloat = new float[listValue.size()];
 
-
-                    try {
-                        int finalPhut = phut;
-                        FirebaseDatabase.getInstance().getReference(Common.keyCurrent + "/" + key)
-                                .addValueEventListener(new ValueEventListener() {
-                                    @Override
-                                    public void onDataChange(@NonNull DataSnapshot snapshot) {
-                                        try {
-                                            String valueOfMinute = snapshot.getValue(Long.class) + "";
-                                            if (!valueOfMinute.equals("null")) {
-                                                dataValues.add(valueOfMinute);
-                                                map.put(key, valueOfMinute);
-                                            } else {
-                                                dataValues.add("0");
-                                                map.put(key, valueOfMinute);
-                                            }
-
-
-                                        } catch (Exception e) {
-                                            e.printStackTrace();
-
+                                    // convert arraylist string to array float
+                                    for (int j = 0; j < listValue.size(); j++) {
+                                        if (listValue.get(j) == null) {
+                                            dataValuesFloat[j] = 0;
+                                        } else {
+                                            dataValuesFloat[j] = Float.parseFloat(listValue.get(j));
                                         }
-
-                                        if (finalPhut == 59) {
-                                            for (int j = 0; j < dataLabels.size(); j++) {
-                                                Log.i(TAG, "onDataChange: " + dataLabels.get(j));
-                                                Log.i(TAG, "onDataChange: " + map.get(gio + ":" + dataLabels.get(j)));
-
-                                            }
-                                            Log.i(TAG, "onDataChange: " + map);
-
-                                        }
-
-
-
+                                        dataLabels.add(j + "");
                                     }
 
-                                    @Override
-                                    public void onCancelled(@NonNull DatabaseError error) {}
-                                });
-                    } catch (Exception e) {
-                        dataValues.add("0");
+                                    String text = "cai quan que";
+                                    Common.updateChar(ActivityCurrent.this, dataLabels, dataValuesFloat, mChart, text);
 
-                    }
+                                }
+                            }
 
-
-                }
-
-
-
-                final String text = "Current";
-                float[] dataValuesFloat = new float[dataValues.size()];
-
-                for (int j = 0; j < dataValuesFloat.length; j++) {
-
-                    try {
-                        dataValuesFloat[j] = Float.parseFloat(dataValues.get(j));
-                    } catch (Exception e) {
-                        Log.e(TAG, "Error: conver float");
-                    }
-
-                    Log.e(TAG, "float: " + dataValuesFloat[j]);
-                }
-
-                Common.updateChar(ActivityCurrent.this, dataLabels, dataValuesFloat, mChart, text);
-
+                            @Override
+                            public void onCancelled(@NonNull DatabaseError error) {
+                                // Failed to read value
+                                Log.w(TAG, "Failed to read value.", error.toException());
+                            }
+                        });
 
             }
 
