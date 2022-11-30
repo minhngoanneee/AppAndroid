@@ -4,6 +4,7 @@ import android.content.Context;
 import android.graphics.Color;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.github.mikephil.charting.charts.CombinedChart;
 import com.github.mikephil.charting.components.XAxis;
@@ -109,7 +110,7 @@ public class Common {
     }
 
     // method update chart
-    public static void updateChar(Context context, List<String> xLabel, float[] dataValues, CombinedChart mChart, String text) {
+    public static void updateChar(Context context, List<String> xLabel, float[] dataValues, CombinedChart mChart, String text, String kyHieu) {
 
         mChart.getDescription().setEnabled(false);
         mChart.setBackgroundColor(backgroundChart);
@@ -121,10 +122,11 @@ public class Common {
             public void onValueSelected(Entry e, Highlight h) {
 //                Toast.makeText(context, "Value: "
 //                        + e.getY()
-//                        + ", index: "
+//                        + ", Phut: "
 //                        + h.getX()
 //                        + ", DataSet index: "
 //                        + h.getDataSetIndex(), Toast.LENGTH_SHORT).show();
+                Toast.makeText(context, "Phut: " + (int) h.getX() + " - Value: " + e.getY() + " " + kyHieu, Toast.LENGTH_SHORT).show();
             }
 
             @Override
@@ -149,7 +151,14 @@ public class Common {
         xAxis.setValueFormatter(new ValueFormatter() {
             @Override
             public String getFormattedValue(float value) {
-                return xLabel.get((int) value % xLabel.size());
+                int x = 0;
+                try {
+                    x = (int) value % xLabel.size();
+                } catch (ArithmeticException ex) {
+                    ex.printStackTrace();
+                    return "";
+                }
+                return xLabel.get(x);
             }
         });
 

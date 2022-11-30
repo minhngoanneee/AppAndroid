@@ -24,6 +24,7 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -59,6 +60,14 @@ public class ActivityCurrent extends AppCompatActivity {
             @Override
             public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
                 String gio = listGios[i];
+//                int gioKieuInt = Integer.parseInt(gio);
+//
+//                // neu gio lon hon 12 thì -12 cho zui
+//                gioKieuInt = gioKieuInt > 12 ? gioKieuInt - 12 : gioKieuInt;
+//
+//                if (gioKieuInt > Calendar.getInstance().get(Calendar.HOUR)) {
+//                    Toast.makeText(ActivityCurrent.this, "Phải chọn giờ trước giờ hiện tại !!!", Toast.LENGTH_SHORT).show();
+//                }
 
                 FirebaseDatabase
                         .getInstance()
@@ -85,8 +94,13 @@ public class ActivityCurrent extends AppCompatActivity {
                                     }
 
                                     String text = "Current";
-                                    Common.updateChar(ActivityCurrent.this, dataLabels, dataValuesFloat, mChart, text);
+                                    Common.updateChar(ActivityCurrent.this, dataLabels, dataValuesFloat, mChart, text, "A");
 
+                                } else {
+                                    // truong hop ni không co data theo gio
+                                    String text = "Current";
+                                    float[] dataValuesFloat = new float[0];
+                                    Common.updateChar(ActivityCurrent.this, dataLabels, dataValuesFloat, mChart, text, "A");
                                 }
                             }
 
@@ -96,7 +110,6 @@ public class ActivityCurrent extends AppCompatActivity {
                                 Log.w(TAG, "Failed to read value.", error.toException());
                             }
                         });
-
             }
 
             @Override
@@ -104,5 +117,30 @@ public class ActivityCurrent extends AppCompatActivity {
 
             }
         });
+
+        // cu 1 giay thi update
+        int miliSecond = 1000;
+        new Timer().scheduleAtFixedRate(new TimerTask() {
+            @Override
+            public void run() {
+                runOnUiThread(() -> {
+                    // lay data tu FireBase
+                    FirebaseDatabase
+                            .getInstance()
+                            .getReference(Common.keyCurrent + "/now")
+                            .addValueEventListener(new ValueEventListener() {
+                                @Override
+                                public void onDataChange(@NonNull DataSnapshot snapshot) {
+                                    txtValue.setText(snapshot.getValue() + " A");
+                                }
+
+                                @Override
+                                public void onCancelled(@NonNull DatabaseError error) {
+
+                                }
+                            });
+                });
+            }
+        },0,miliSecond);
     }
 }
