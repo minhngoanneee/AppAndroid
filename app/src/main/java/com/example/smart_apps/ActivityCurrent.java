@@ -84,7 +84,7 @@ public class ActivityCurrent extends AppCompatActivity {
                                         dataLabels.add(j + "");
                                     }
 
-                                    String text = "cai quan que";
+                                    String text = "Current";
                                     Common.updateChar(ActivityCurrent.this, dataLabels, dataValuesFloat, mChart, text);
 
                                 }
