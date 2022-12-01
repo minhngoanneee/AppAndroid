@@ -8,7 +8,10 @@ import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.ImageView;
+import android.widget.Spinner;
 import android.widget.TextView;
 
 import com.github.mikephil.charting.charts.CombinedChart;
@@ -26,8 +29,8 @@ public class ActivityWalter extends AppCompatActivity {
     private FloatingActionButton fthome;
     private CombinedChart mChart;
     private TextView txtHigh, txtWalter;
-    private ImageView iconHigh;
-    private ImageView iconHighLeft;
+    private ImageView iconHigh, iconHighLeft;
+    private Spinner spinner;
 
     @SuppressLint("MissingInflatedId")
     @Override
@@ -41,48 +44,41 @@ public class ActivityWalter extends AppCompatActivity {
         iconHighLeft = findViewById(R.id.iconHighLeft);
         txtWalter = findViewById(R.id.txtWalter);
         mChart = findViewById(R.id.bieuDoNuoc);
+        spinner = findViewById(R.id.spinner_water);
 
         fthome.setOnClickListener(view -> startActivity(new Intent(getApplicationContext(), ActivityHome.class)));
 
         // cam bien
         iconHighLeft.setColorFilter(Color.WHITE);
         iconHigh.setColorFilter(Color.WHITE);
-//
-//        // cu 1 giay thi update
-//        int miliSecond = 1000;
-//        new Timer().scheduleAtFixedRate(new TimerTask() {
-//            @Override
-//            public void run() {
-//                runOnUiThread(() -> {
-//                    // lay data tu FireBase
-//                    FirebaseDatabase.getInstance().getReference(Common.keyChatLuongNuoc)
-//                            .addValueEventListener(new ValueEventListener() {
-//                                @Override
-//                                public void onDataChange(@NonNull DataSnapshot snapshot) {
-//                                    float result = snapshot.getValue(Float.class);
-//
-//                                    txtWalter.setText(result + " %");
-//                                    dataValues[0] = Common.updateDataValues(dataValues[0], result);
-//                                    dataLabels[0] = Common.updateLabelValues(dataLabels[0], result + "");
-//
-//                                    final String text = "SOLUTE CONCENTRATION";
-//                                    Common.updateChar(ActivityWalter.this, dataLabels[0], dataValues[0], mChart, text);
-//
-//                                    if (result >= Common.maxValueWalter) {
-//                                        Common.thayDoiMau(txtHigh, iconHighLeft, iconHigh, Color.RED);
-//                                    } else {
-//                                        Common.thayDoiMau(txtHigh, iconHighLeft, iconHigh, Color.WHITE);
-//                                    }
-//
-//                                }
-//
-//                                @Override
-//                                public void onCancelled(@NonNull DatabaseError error) {
-//
-//                                }
-//                            });
-//                });
-//            }
-//        },0, miliSecond);
+
+        // xoa du lieu
+        Common.removeDataAfterNow(Common.keyChatLuongNuoc);
+
+        // tao mang de hien thi len spinner
+        String[] listGios = Common.initValueSpinner();
+        ArrayAdapter<String> adapter = Common.initAdaper(this, listGios);
+
+        spinner.setAdapter(adapter);
+        spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
+                Common.hienThiChartTheoGio(ActivityWalter.this, listGios, i, Common.keyChatLuongNuoc, mChart, "Water", "%");
+            }
+            @Override
+            public void onNothingSelected(AdapterView<?> adapterView) {}
+        });
+
+        // cu 1 giay thi update
+        int miliSecond = 1000;
+        new Timer().scheduleAtFixedRate(new TimerTask() {
+            @Override
+            public void run() {
+                runOnUiThread(() -> {
+                    // lay data tu FireBase
+                    Common.updateNow(Common.keyCurrent, txtWalter, txtHigh, iconHighLeft, iconHigh, "A");
+                });
+            }
+        },0, miliSecond);
     }
 }
