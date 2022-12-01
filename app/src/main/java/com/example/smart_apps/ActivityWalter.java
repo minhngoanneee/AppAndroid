@@ -45,8 +45,6 @@ public class ActivityWalter extends AppCompatActivity {
         fthome.setOnClickListener(view -> startActivity(new Intent(getApplicationContext(), ActivityHome.class)));
 
         // cam bien
-        final List<String>[] dataLabels = new List[]{Common.initLabelValues()};
-        float[][] dataValues = {Common.initDataValues()};
         iconHighLeft.setColorFilter(Color.WHITE);
         iconHigh.setColorFilter(Color.WHITE);
 //

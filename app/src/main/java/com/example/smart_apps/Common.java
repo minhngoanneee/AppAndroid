@@ -1,10 +1,17 @@
 package com.example.smart_apps;
 
+import static android.content.ContentValues.TAG;
+
 import android.content.Context;
 import android.graphics.Color;
+import android.os.Build;
+import android.util.Log;
+import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import androidx.annotation.NonNull;
 
 import com.github.mikephil.charting.charts.CombinedChart;
 import com.github.mikephil.charting.components.XAxis;
@@ -18,9 +25,16 @@ import com.github.mikephil.charting.formatter.ValueFormatter;
 import com.github.mikephil.charting.highlight.Highlight;
 import com.github.mikephil.charting.interfaces.datasets.ILineDataSet;
 import com.github.mikephil.charting.listener.OnChartValueSelectedListener;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class Common {
 
@@ -37,13 +51,6 @@ public class Common {
     public static final float maxValueTemp = 30;
     public static final float maxValueCO2 = 250;
     public static final float maxValueWalter = 100;
-
-    private static CombinedChart mChart;
-
-    // method init dataValues
-    public static float[] initDataValues() {
-        return new float[]{0, 0, 0, 0 ,0 ,0};
-    }
 
     // method init values spinner
     public static String[] initValueSpinner() {
@@ -75,38 +82,13 @@ public class Common {
         };
     }
 
-    // method init labelValues
-    public static List<String> initLabelValues() {
-        List<String> xLabel = new ArrayList<>();
-        xLabel.add("Jan");
-        xLabel.add("Feb");
-        xLabel.add("Mar");
-        xLabel.add("Apr");
-        xLabel.add("May");
-        xLabel.add("Jun");
-        return xLabel;
-    }
+    // method init adapter spinner
+    public static ArrayAdapter<String> initAdaper(Context context, String[] listGios) {
 
-    // method update dataValues
-    public static float[] updateDataValues(float[] dataValues, float newValue) {
-        // loop de chuyen doi gia tri ve sau
-        for (int i = 0; i < dataValues.length - 1; i++) {
-            dataValues[i] = dataValues[i + 1];
-        }
-        // set gia tri moi vao
-        dataValues[dataValues.length - 1] = newValue;
-        return dataValues;
-    }
+        ArrayAdapter<String> adapter = new ArrayAdapter<>(context, android.R.layout.simple_list_item_1, listGios);
+        adapter.setDropDownViewResource(android.R.layout.simple_list_item_single_choice);
 
-    // method update labelValues
-    public static List<String> updateLabelValues(List<String> labelValues, String newLabel) {
-        // loop de chuyen doi gia tri ve sau
-        for (int i = 0; i < labelValues.size() - 1; i++) {
-            labelValues.set(i, labelValues.get(i + 1));
-        }
-        // set gia tri moi vao
-        labelValues.set(labelValues.size() - 1, newLabel);
-        return labelValues;
+        return adapter;
     }
 
     // method update chart
@@ -205,5 +187,103 @@ public class Common {
         txtHighTemp.setTextColor(colerCode);
         iconHighTempLeft.setColorFilter(colerCode);
         iconHighTempRight.setColorFilter(colerCode);
+    }
+
+    // method
+    public static void hienThiChartTheoGio(Context context, String[] listGios, int i, String path, CombinedChart mChart, String text, String kyHieu) {
+        String gio = listGios[i];
+        int gioKieuInt = Integer.parseInt(gio);
+
+        // neu gio lon hon 12 thì -12 cho zui
+        gioKieuInt = gioKieuInt > 12 ? gioKieuInt - 12 : gioKieuInt;
+
+        if (gioKieuInt > Calendar.getInstance().get(Calendar.HOUR)) {
+            Toast.makeText(context, "Phải chọn giờ trước giờ hiện tại !!!", Toast.LENGTH_SHORT).show();
+        } else {
+            FirebaseDatabase
+                    .getInstance()
+                    .getReference(path + "/" + gio)
+                    .addValueEventListener(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(@NonNull DataSnapshot snapshot) {
+                            // This method is called once with the initial value and again
+                            // whenever data at this location is updated.
+
+                            Object ob = snapshot.getValue();
+                            boolean isHashMap = ob instanceof HashMap;
+
+                            List<String> dataLabels = new ArrayList<>();
+                            float[] dataValuesFloat = null;
+
+                            if (isHashMap) {
+                                // truong hop nhan duoc hashmap
+                                Map<String, String> map = (Map<String, String>) ob;
+
+                                dataLabels = new ArrayList<>(map.keySet());
+                                dataValuesFloat = new float[dataLabels.size()];
+
+                                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+                                    dataLabels.sort((key1, key2) -> {
+                                        return key1.compareTo(key2);
+                                    });
+                                }
+
+                                for (int i = 0; i < dataLabels.size(); i++) {
+                                    String value = map.get(dataLabels.get(i));
+                                    dataValuesFloat[i] = Float.parseFloat(value);
+                                }
+
+                                for (Float s: dataValuesFloat) {
+                                    Log.e(TAG, "Value: " + s );
+                                }
+
+                            } else {
+                                //truong hop nhan duoc arraylist
+                                List<String> listValue = (ArrayList<String>) ob;
+                                if (listValue != null) {
+                                    dataValuesFloat = new float[listValue.size()];
+
+                                    // convert arraylist string to array float
+                                    for (int j = 0; j < listValue.size(); j++) {
+                                        if (listValue.get(j) == null) {
+                                            dataValuesFloat[j] = 0;
+                                        } else {
+                                            dataValuesFloat[j] = Float.parseFloat(listValue.get(j));
+                                        }
+                                        dataLabels.add(j + "");
+                                    }
+                                } else {
+                                    // truong hop ni không co data theo gio
+                                    dataValuesFloat = new float[0];
+                                }
+                            }
+
+                            Common.updateChar(context, dataLabels, dataValuesFloat, mChart, text, kyHieu);
+                        }
+
+                        @Override
+                        public void onCancelled(@NonNull DatabaseError error) {
+                            // Failed to read value
+                            Log.w(TAG, "Failed to read value.", error.toException());
+                        }
+                    });
+        }
+    }
+
+    public static void updateNow(String path, TextView txtValue) {
+        FirebaseDatabase
+                .getInstance()
+                .getReference(path + "/now")
+                .addValueEventListener(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot snapshot) {
+                        txtValue.setText(snapshot.getValue() + " A");
+                    }
+
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError error) {
+
+                    }
+                });
     }
 }
