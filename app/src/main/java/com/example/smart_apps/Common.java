@@ -254,4 +254,50 @@ public class Common {
                     }
                 });
     }
+
+    public static void removeDataAfterNow(String path) {
+// thoi gian hien tai
+        Date date = new Date();
+
+        // xoa data tu thoi diem hien tai
+        FirebaseDatabase
+                .getInstance()
+                .getReference(path + "/" + date.getHours())
+                .addValueEventListener(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot snapshot) {
+                        int index = 0;
+                        for (DataSnapshot appleSnapshot : snapshot.getChildren()) {
+                            if (index > date.getMinutes()) {
+                                appleSnapshot.getRef().removeValue();
+                                Log.e(TAG, "onDataChange: " + appleSnapshot.getValue());
+                            }
+                            index++;
+                        }
+                    }
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError error) {
+                        Log.e(TAG, "onCancelled", error.toException());
+                    }
+                });
+
+        // xoa data sau gio
+        for (int i = date.getHours() + 1; i < 24; i++) {
+            FirebaseDatabase
+                    .getInstance()
+                    .getReference(path + "/" + i)
+                    .addValueEventListener(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(@NonNull DataSnapshot snapshot) {
+                            for (DataSnapshot appleSnapshot : snapshot.getChildren()) {
+                                appleSnapshot.getRef().removeValue();
+                            }
+                        }
+                        @Override
+                        public void onCancelled(@NonNull DatabaseError error) {
+                            Log.e(TAG, "onCancelled", error.toException());
+                        }
+                    });
+        }
+    }
 }
