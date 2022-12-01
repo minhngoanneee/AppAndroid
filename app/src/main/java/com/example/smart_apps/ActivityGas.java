@@ -7,7 +7,11 @@ import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.ImageView;
+import android.widget.Spinner;
 import android.widget.TextView;
 
 import com.github.mikephil.charting.charts.CombinedChart;
@@ -26,6 +30,7 @@ public class ActivityGas extends AppCompatActivity {
     private CombinedChart mChart;
     private TextView txtHigh, txtValue;
     private ImageView imgLeft, imgRight;
+    private Spinner spinner;
 
     @SuppressLint("MissingInflatedId")
     @Override
@@ -40,50 +45,37 @@ public class ActivityGas extends AppCompatActivity {
         imgRight = findViewById(R.id.imgRightGas);
         mChart = findViewById(R.id.bieuDoGas);
         fthome = findViewById(R.id.fthome);
+        spinner = findViewById(R.id.spinner_gas);
 
         fthome.setOnClickListener(view -> startActivity(new Intent(getApplicationContext(), ActivityAir.class)));
 
-//        // cam bien
-//        final List<String>[] dataLabels = new List[]{Common.initLabelValues()};
-//        float[][] dataValues = {Common.initDataValues()};
-//
-//        imgLeft.setColorFilter(Color.WHITE);
-//        imgRight.setColorFilter(Color.WHITE);
-//
-//        // cu 1 giay thi update
-//        int miliSecond = 1000;
-//        new Timer().scheduleAtFixedRate(new TimerTask() {
-//            @Override
-//            public void run() {
-//                runOnUiThread(() -> {
-//                    // lay data tu FireBase
-//                    FirebaseDatabase.getInstance().getReference(Common.keyGas)
-//                            .addValueEventListener(new ValueEventListener() {
-//                                @Override
-//                                public void onDataChange(@NonNull DataSnapshot snapshot) {
-//                                    float result = snapshot.getValue(Float.class);
-//
-//                                    txtValue.setText(result + " ppm");
-//                                    dataValues[0] = Common.updateDataValues(dataValues[0], result);
-//                                    dataLabels[0] = Common.updateLabelValues(dataLabels[0], result + "");
-//
-//                                    final String text = "CO2";
-//                                    Common.updateChar(ActivityGas.this, dataLabels[0], dataValues[0], mChart, text);
-//
-//                                    if (result >= Common.maxValueCO2) {
-//                                        Common.thayDoiMau(txtHigh, imgLeft, imgRight, Color.RED);
-//                                    } else {
-//                                        Common.thayDoiMau(txtHigh, imgLeft, imgRight, Color.WHITE);
-//                                    }
-//                                }
-//
-//                                @Override
-//                                public void onCancelled(@NonNull DatabaseError error) {
-//
-//                                }
-//                            });
-//                });
-//            }
-//        },0, miliSecond);
+        // xoa du lieu
+        Common.removeDataAfterNow(Common.keyGas);
+
+        // tao mang de hien thi len spinner
+        String[] listGios = Common.initValueSpinner();
+        ArrayAdapter<String> adapter = Common.initAdaper(this, listGios);
+
+        spinner.setAdapter(adapter);
+        spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
+                Common.hienThiChartTheoGio(ActivityGas.this, listGios, i, Common.keyGas, mChart, "Gas", "ppm");
+            }
+            @Override
+            public void onNothingSelected(AdapterView<?> adapterView) {}
+        });
+
+        // cu 1 giay thi update
+        int miliSecond = 1000;
+        new Timer().scheduleAtFixedRate(new TimerTask() {
+            @Override
+            public void run() {
+                runOnUiThread(() -> {
+                    // lay data tu FireBase
+                    Common.updateNow(Common.keyGas, txtValue, txtHigh, imgLeft, imgRight, "ppm");
+                });
+            }
+        },0, miliSecond);
     }
 }

@@ -189,15 +189,18 @@ public class Common {
                                 // truong hop nhan duoc hashmap
                                 Map<String, String> map = (Map<String, String>) ob;
 
+                                // tao mang chua phut va mang chua gia tri
                                 dataLabels = new ArrayList<>(map.keySet());
                                 dataValuesFloat = new float[dataLabels.size()];
 
+                                // sap xep lai phut
                                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
                                     dataLabels.sort((key1, key2) -> {
                                         return key1.compareTo(key2);
                                     });
                                 }
 
+                                // lay gia tri ben map chuyen qua arrayfloat theo phut
                                 for (int i = 0; i < dataLabels.size(); i++) {
                                     String value = map.get(dataLabels.get(i));
                                     dataValuesFloat[i] = Float.parseFloat(value);
@@ -238,14 +241,39 @@ public class Common {
         }
     }
 
-    public static void updateNow(String path, TextView txtValue) {
+    public static void updateNow(String path, TextView txtValue, String kyHieu) {
         FirebaseDatabase
                 .getInstance()
                 .getReference(path + "/now")
                 .addValueEventListener(new ValueEventListener() {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot snapshot) {
-                        txtValue.setText(snapshot.getValue() + " A");
+                        txtValue.setText(snapshot.getValue() + " " + kyHieu);
+                    }
+
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError error) {
+
+                    }
+                });
+    }
+
+    public static void updateNow(String path, TextView txtValue, TextView txtHigh, ImageView imgLeft, ImageView imgRight, String kyHieu) {
+        FirebaseDatabase
+                .getInstance()
+                .getReference(path + "/now")
+                .addValueEventListener(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot snapshot) {
+                        float result = Float.parseFloat((String) snapshot.getValue());
+
+                        txtValue.setText(result + " " + kyHieu);
+
+                        if (result >= Common.maxValueCO2) {
+                            Common.thayDoiMau(txtHigh, imgLeft, imgRight, Color.RED);
+                        } else {
+                            Common.thayDoiMau(txtHigh, imgLeft, imgRight, Color.WHITE);
+                        }
                     }
 
                     @Override
@@ -256,10 +284,10 @@ public class Common {
     }
 
     public static void removeDataAfterNow(String path) {
-// thoi gian hien tai
+        // thoi gian hien tai
         Date date = new Date();
 
-        // xoa data tu thoi diem hien tai
+        // xoa data theo phut
         FirebaseDatabase
                 .getInstance()
                 .getReference(path + "/" + date.getHours())

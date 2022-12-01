@@ -57,7 +57,7 @@ public class ActivityCurrent extends AppCompatActivity {
             public void run() {
                 runOnUiThread(() -> {
                     // lay data tu FireBase
-                    Common.updateNow(Common.keyCurrent, txtValue);
+                    Common.updateNow(Common.keyCurrent, txtValue, "A");
                 });
             }
         },0, miliSecond);

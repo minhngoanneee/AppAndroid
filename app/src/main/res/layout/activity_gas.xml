@@ -22,20 +22,6 @@ tools:context=".ActivityVoltage">
     app:srcCompat="@drawable/gff" />
 
     <TextView
-        android:id="@+id/highGas"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="HIGH"
-        android:textColor="#FFF"
-        android:textSize="22sp"
-        android:textStyle="italic"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.952" />
-
-    <TextView
         android:id="@+id/textView18"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -82,29 +68,43 @@ tools:context=".ActivityVoltage">
 
 
     <ImageView
-        android:id="@+id/imgLeftGas"
-        android:layout_width="47dp"
-        android:layout_height="47dp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.109"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.951"
-        app:srcCompat="@drawable/triangle_warning" />
-
-
-    <ImageView
         android:id="@+id/imgRightGas"
         android:layout_width="47dp"
         android:layout_height="47dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.843"
+        app:layout_constraintHorizontal_bias="0.931"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.951"
+        app:layout_constraintVertical_bias="0.976"
         app:srcCompat="@drawable/c" />
+
+    <ImageView
+        android:id="@+id/imgLeftGas"
+        android:layout_width="47dp"
+        android:layout_height="47dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.478"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.976"
+        app:srcCompat="@drawable/triangle_warning" />
+
+    <TextView
+        android:id="@+id/highGas"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="HIGH"
+        android:textColor="#FFF"
+        android:textSize="22sp"
+        android:textStyle="italic"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.697"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.977" />
 
     <TextView
         android:id="@+id/textView7"
@@ -116,19 +116,43 @@ tools:context=".ActivityVoltage">
         android:textStyle="bold|italic"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.135"
+        app:layout_constraintHorizontal_bias="0.07"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.873" />
+        app:layout_constraintVertical_bias="0.977" />
 
     <com.github.mikephil.charting.charts.CombinedChart
         android:id="@+id/bieuDoGas"
-        android:layout_width="370dp"
+        android:layout_width="match_parent"
         android:layout_height="440dp"
-        android:layout_marginTop="160dp"
+        android:layout_marginTop="220dp"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.491"
+        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/textView12"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="168dp"
+        android:text="Select time:"
+        android:textSize="20dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.477"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:ignore="MissingConstraints" />
+
+    <Spinner
+        android:id="@+id/spinner_gas"
+        android:layout_width="100dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="160dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.881"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:ignore="MissingConstraints" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

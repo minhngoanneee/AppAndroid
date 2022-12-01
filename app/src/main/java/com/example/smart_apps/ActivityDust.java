@@ -6,6 +6,10 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
+import android.widget.Spinner;
 import android.widget.TextView;
 
 import com.github.mikephil.charting.charts.CombinedChart;
@@ -23,8 +27,7 @@ public class ActivityDust extends AppCompatActivity {
     private FloatingActionButton fhome;
     private TextView txtValue;
     private CombinedChart mChart;
-
-
+    private Spinner spinner;
 
     @SuppressLint("MissingInflatedId")
     @Override
@@ -35,42 +38,36 @@ public class ActivityDust extends AppCompatActivity {
         fhome = findViewById(R.id.fthomeDust);
         txtValue = findViewById(R.id.txtValueDust);
         mChart = findViewById(R.id.chartDust);
+        spinner = findViewById(R.id.spinner_dust);
         fhome.setOnClickListener(view -> startActivity(new Intent(ActivityDust.this, ActivityAir.class)));
 
-//        // cam bien
-//        final List<String>[] dataLabels = new List[]{Common.initLabelValues()};
-//        float[][] dataValues = {Common.initDataValues()};
-//
-//        // cu 1 giay thi update
-//        int miliSecond = 1000;
-//        new Timer().scheduleAtFixedRate(new TimerTask() {
-//            @Override
-//            public void run() {
-//                runOnUiThread(() -> {
-//                    // lay data tu FireBase
-//                    FirebaseDatabase.getInstance().getReference(Common.keyDust)
-//                            .addValueEventListener(new ValueEventListener() {
-//                                @Override
-//                                public void onDataChange(@NonNull DataSnapshot snapshot) {
-//                                    float result = snapshot.getValue(Float.class);
-//
-//                                    txtValue.setText(result + " %");
-//                                    dataValues[0] = Common.updateDataValues(dataValues[0], result);
-//                                    dataLabels[0] = Common.updateLabelValues(dataLabels[0], result + "");
-//
-//                                    final String text = "Dust";
-//                                    Common.updateChar(ActivityDust.this, dataLabels[0], dataValues[0], mChart, text);
-//                                }
-//
-//                                @Override
-//                                public void onCancelled(@NonNull DatabaseError error) {
-//
-//                                }
-//                            });
-//                });
-//            }
-//        },0,miliSecond);
+        // xoa du lieu
+        Common.removeDataAfterNow(Common.keyDust);
 
+        // tao mang de hien thi len spinner
+        String[] listGios = Common.initValueSpinner();
+        ArrayAdapter<String> adapter = Common.initAdaper(this, listGios);
 
+        spinner.setAdapter(adapter);
+        spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
+                Common.hienThiChartTheoGio(ActivityDust.this, listGios, i, Common.keyDust, mChart, "Dust", "%");
+            }
+            @Override
+            public void onNothingSelected(AdapterView<?> adapterView) {}
+        });
+
+        // cu 1 giay thi update
+        int miliSecond = 1000;
+        new Timer().scheduleAtFixedRate(new TimerTask() {
+            @Override
+            public void run() {
+                runOnUiThread(() -> {
+                    // lay data tu FireBase
+                    Common.updateNow(Common.keyDust, txtValue, "%");
+                });
+            }
+        },0, miliSecond);
     }
 }
