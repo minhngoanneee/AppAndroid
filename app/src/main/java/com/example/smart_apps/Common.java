@@ -31,7 +31,7 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
-import java.util.Calendar;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -55,45 +55,23 @@ public class Common {
     // method init values spinner
     public static String[] initValueSpinner() {
         return new String[] {
-                "0",
-                "1",
-                "2",
-                "3",
-                "4",
-                "5",
-                "6",
-                "7",
-                "8",
-                "9",
-                "10",
-                "11",
-                "12",
-                "13",
-                "14",
-                "15",
-                "16",
-                "17",
-                "18",
-                "19",
-                "20",
-                "21",
-                "22",
-                "23"
+                "0", "1", "2", "3", "4", "5",
+                "6", "7", "8", "9", "10", "11",
+                "12", "13", "14", "15", "16",
+                "17", "18", "19", "20", "21",
+                "22", "23"
         };
     }
 
     // method init adapter spinner
     public static ArrayAdapter<String> initAdaper(Context context, String[] listGios) {
-
         ArrayAdapter<String> adapter = new ArrayAdapter<>(context, android.R.layout.simple_list_item_1, listGios);
         adapter.setDropDownViewResource(android.R.layout.simple_list_item_single_choice);
-
         return adapter;
     }
 
     // method update chart
     public static void updateChar(Context context, List<String> xLabel, float[] dataValues, CombinedChart mChart, String text, String kyHieu) {
-
         mChart.getDescription().setEnabled(false);
         mChart.setBackgroundColor(backgroundChart);
         mChart.setDrawGridBackground(false);
@@ -110,11 +88,8 @@ public class Common {
 //                        + h.getDataSetIndex(), Toast.LENGTH_SHORT).show();
                 Toast.makeText(context, "Phut: " + (int) h.getX() + " - Value: " + e.getY() + " " + kyHieu, Toast.LENGTH_SHORT).show();
             }
-
             @Override
-            public void onNothingSelected() {
-
-            }
+            public void onNothingSelected() {}
         });
 
         YAxis rightAxis = mChart.getAxisRight();
@@ -158,7 +133,6 @@ public class Common {
 
     private static DataSet dataChart(float[] data, String text) {
         LineData d = new LineData();
-
         ArrayList<Entry> entries = new ArrayList<Entry>();
 
         for (int index = 0; index < data.length; index++) {
@@ -175,7 +149,6 @@ public class Common {
         set.setDrawValues(true);
         set.setValueTextSize(10f);
         set.setValueTextColor(colorLine);
-
         set.setAxisDependency(YAxis.AxisDependency.LEFT);
         d.addDataSet(set);
 
@@ -194,10 +167,7 @@ public class Common {
         String gio = listGios[i];
         int gioKieuInt = Integer.parseInt(gio);
 
-        // neu gio lon hon 12 thì -12 cho zui
-        gioKieuInt = gioKieuInt > 12 ? gioKieuInt - 12 : gioKieuInt;
-
-        if (gioKieuInt > Calendar.getInstance().get(Calendar.HOUR)) {
+        if (gioKieuInt > new Date().getHours()) {
             Toast.makeText(context, "Phải chọn giờ trước giờ hiện tại !!!", Toast.LENGTH_SHORT).show();
         } else {
             FirebaseDatabase
@@ -236,7 +206,6 @@ public class Common {
                                 for (Float s: dataValuesFloat) {
                                     Log.e(TAG, "Value: " + s );
                                 }
-
                             } else {
                                 //truong hop nhan duoc arraylist
                                 List<String> listValue = (ArrayList<String>) ob;
@@ -260,7 +229,6 @@ public class Common {
 
                             Common.updateChar(context, dataLabels, dataValuesFloat, mChart, text, kyHieu);
                         }
-
                         @Override
                         public void onCancelled(@NonNull DatabaseError error) {
                             // Failed to read value

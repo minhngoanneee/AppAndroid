@@ -56,80 +56,10 @@ public class ActivityCurrent extends AppCompatActivity {
             @Override
             public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
                 Common.hienThiChartTheoGio(ActivityCurrent.this, listGios, i, Common.keyCurrent, mChart, "Current", "A");
-
-                String gio = listGios[i];
-//                int gioKieuInt = Integer.parseInt(gio);
-//
-//                // neu gio lon hon 12 thì -12 cho zui
-//                gioKieuInt = gioKieuInt > 12 ? gioKieuInt - 12 : gioKieuInt;
-//
-//                if (gioKieuInt > Calendar.getInstance().get(Calendar.HOUR)) {
-//                    Toast.makeText(ActivityCurrent.this, "Phải chọn giờ trước giờ hiện tại !!!", Toast.LENGTH_SHORT).show();
-//                }
-
-                DatabaseReference dbrf =  FirebaseDatabase
-                        .getInstance()
-                        .getReference(Common.keyCurrent + "/" + gio);
-
-                dbrf.addValueEventListener(new ValueEventListener() {
-                            @Override
-                            public void onDataChange(@NonNull DataSnapshot snapshot) {
-                                // This method is called once with the initial value and again
-                                // whenever data at this location is updated.
-
-                                try {
-                                    List<String> listValue = (ArrayList<String>) snapshot.getValue();
-                                    List<String> dataLabels = new ArrayList<>();
-
-                                    if (listValue != null) {
-                                        float[] dataValuesFloat = new float[listValue.size()];
-
-                                        // convert arraylist string to array float
-                                        for (int j = 0; j < listValue.size(); j++) {
-                                            if (listValue.get(j) == null) {
-                                                dataValuesFloat[j] = 0;
-                                            } else {
-                                                dataValuesFloat[j] = Float.parseFloat(listValue.get(j));
-                                            }
-                                            dataLabels.add(j + "");
-                                        }
-
-                                        String text = "Current";
-                                        Common.updateChar(ActivityCurrent.this, dataLabels, dataValuesFloat, mChart, text, "A");
-                                        Log.e(TAG, "onDataChange: " + gio);
-                                    } else {
-                                        // truong hop ni không co data theo gio
-//                                    String text = "Current";
-//                                    dataLabels.add("");
-//                                    float[] dataValuesFloat = new float[1];
-//                                    dataValuesFloat[0] = 0;
-//                                    Common.updateChar(ActivityCurrent.this, dataLabels, dataValuesFloat, mChart, text, "A");
-                                    }
-                                } catch (ClassCastException ex) {
-                                    ex.printStackTrace();
-
-                                    Map<String, String> map = (Map<String, String>) snapshot.getValue();
-
-                                    Object[] s = map.keySet().toArray();
-
-                                    Log.i(TAG, "onDataChange: " + s.toString());
-
-                                }
-
-                            }
-
-                            @Override
-                            public void onCancelled(@NonNull DatabaseError error) {
-                                // Failed to read value
-                                Log.w(TAG, "Failed to read value.", error.toException());
-                            }
-                        });
             }
 
             @Override
-            public void onNothingSelected(AdapterView<?> adapterView) {
-
-            }
+            public void onNothingSelected(AdapterView<?> adapterView) {}
         });
 
         // cu 1 giay thi update
