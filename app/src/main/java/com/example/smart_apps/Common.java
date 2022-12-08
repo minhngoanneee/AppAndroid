@@ -36,6 +36,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import io.grpc.internal.LogExceptionRunnable;
+
 public class Common {
 
     public static final String keyNhietDo = "temp";
@@ -202,8 +204,21 @@ public class Common {
 
                                 // lay gia tri ben map chuyen qua arrayfloat theo phut
                                 for (int i = 0; i < dataLabels.size(); i++) {
-                                    String value = map.get(dataLabels.get(i));
-                                    dataValuesFloat[i] = Float.parseFloat(value);
+
+                                    // lay tung doi tuong ra de xu lý
+                                    Object ob1 = map.get(dataLabels.get(i));
+                                    float value = 0;
+
+                                    // neu la String thi xu ly 1 kieu, con ngươi lai thi la double
+                                    if (ob1 instanceof String) {
+                                        value =  Float.parseFloat((String) ob1);
+                                    } else {
+                                        double d = Double.parseDouble((String) ob1);
+                                        value = (float) d;
+                                    }
+
+                                    // gan lai mang de chuyen qua chart hien thi
+                                    dataValuesFloat[i] = value;
                                 }
 
                                 for (Float s: dataValuesFloat) {
@@ -211,7 +226,7 @@ public class Common {
                                 }
                             } else {
                                 //truong hop nhan duoc arraylist
-                                List<String> listValue = (ArrayList<String>) ob;
+                                List<Object> listValue = (ArrayList<Object>) ob;
                                 if (listValue != null) {
                                     dataValuesFloat = new float[listValue.size()];
 
@@ -220,7 +235,17 @@ public class Common {
                                         if (listValue.get(j) == null) {
                                             dataValuesFloat[j] = 0;
                                         } else {
-                                            dataValuesFloat[j] = Float.parseFloat(listValue.get(j));
+                                            Object ob3 = listValue.get(j);
+                                            double d = 0;
+                                            if (ob3 instanceof String) {
+                                                d = Double.parseDouble((String)listValue.get(j));
+                                            } else if (ob3 instanceof Long) {
+                                                long l = (Long) listValue.get(j);
+                                                d = (double) l;
+                                            } else {
+                                                d = (Double) listValue.get(j);
+                                            }
+                                            dataValuesFloat[j] = (float) d;
                                         }
                                         dataLabels.add(j + "");
                                     }
@@ -258,18 +283,33 @@ public class Common {
                 });
     }
 
-    public static void updateNow(String path, TextView txtValue, TextView txtHigh, ImageView imgLeft, ImageView imgRight, String kyHieu) {
+    public static void updateNow(String path, TextView txtValue, TextView txtHigh, ImageView imgLeft, ImageView imgRight, String kyHieu, String loai) {
         FirebaseDatabase
                 .getInstance()
                 .getReference(path + "/now")
                 .addValueEventListener(new ValueEventListener() {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot snapshot) {
-                        float result = Float.parseFloat((String) snapshot.getValue());
+                        Object ob = snapshot.getValue();
+
+
+                        float result = 0;
+                        if (ob instanceof Double) {
+                            double d = (Double) ob;
+                            result = (float) d;
+                        } if (ob instanceof Long) {
+                            long l = (Long) ob;
+                            result = (float) l;
+                        } else {
+                            result = Float.parseFloat((String) ob);
+                        }
+
 
                         txtValue.setText(result + " " + kyHieu);
 
-                        if (result >= Common.maxValueCO2) {
+                        float soSanh = loai.equals("water") ? Common.maxValueWalter : Common.maxValueCO2;
+
+                        if (result >= soSanh) {
                             Common.thayDoiMau(txtHigh, imgLeft, imgRight, Color.RED);
                         } else {
                             Common.thayDoiMau(txtHigh, imgLeft, imgRight, Color.WHITE);

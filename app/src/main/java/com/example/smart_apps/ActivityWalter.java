@@ -63,7 +63,7 @@ public class ActivityWalter extends AppCompatActivity {
         spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
-                Common.hienThiChartTheoGio(ActivityWalter.this, listGios, i, Common.keyChatLuongNuoc, mChart, "Water", "%");
+                Common.hienThiChartTheoGio(ActivityWalter.this, listGios, i, Common.keyChatLuongNuoc, mChart, "Water", "ppm");
             }
             @Override
             public void onNothingSelected(AdapterView<?> adapterView) {}
@@ -76,9 +76,11 @@ public class ActivityWalter extends AppCompatActivity {
             public void run() {
                 runOnUiThread(() -> {
                     // lay data tu FireBase
-                    Common.updateNow(Common.keyCurrent, txtWalter, txtHigh, iconHighLeft, iconHigh, "A");
+                    Common.updateNow(Common.keyChatLuongNuoc, txtWalter, txtHigh, iconHighLeft, iconHigh, "ppm", "water");
                 });
             }
         },0, miliSecond);
     }
 }
+
+

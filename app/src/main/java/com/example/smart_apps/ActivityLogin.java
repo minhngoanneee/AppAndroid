@@ -34,7 +34,7 @@ public class ActivityLogin extends AppCompatActivity {
         btnlogin.setOnClickListener(view -> {
             // bỏ qua quá trình đăng nhập
             // ActivityHome.class
-            startActivity(new Intent(ActivityLogin.this, ActivityHome.class));
+            // startActivity(new Intent(ActivityLogin.this, ActivityHome.class));
 
             String username = edtuser.getText().toString();
             String password = edtpassword.getText().toString();

@@ -73,7 +73,7 @@ public class ActivityGas extends AppCompatActivity {
             public void run() {
                 runOnUiThread(() -> {
                     // lay data tu FireBase
-                    Common.updateNow(Common.keyGas, txtValue, txtHigh, imgLeft, imgRight, "ppm");
+                    Common.updateNow(Common.keyGas, txtValue, txtHigh, imgLeft, imgRight, "ppm", "ssCo2");
                 });
             }
         },0, miliSecond);
