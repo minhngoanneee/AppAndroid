@@ -211,7 +211,7 @@ public class Common {
 
                                     // neu la String thi xu ly 1 kieu, con ngươi lai thi la double
                                     if (ob1 instanceof String) {
-                                        value =  Float.parseFloat((String) ob1);
+                                        value = Float.parseFloat((String) ob1);
                                     } else {
                                         double d = Double.parseDouble((String) ob1);
                                         value = (float) d;
@@ -303,6 +303,7 @@ public class Common {
                         } else {
                             result = Float.parseFloat((String) ob);
                         }
+
 
 
                         txtValue.setText(result + " " + kyHieu);
