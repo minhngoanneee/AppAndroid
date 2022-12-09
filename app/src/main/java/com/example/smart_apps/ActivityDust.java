@@ -52,7 +52,7 @@ public class ActivityDust extends AppCompatActivity {
         spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
-                Common.hienThiChartTheoGio(ActivityDust.this, listGios, i, Common.keyDust, mChart, "Dust", "%");
+                Common.hienThiChartTheoGio(ActivityDust.this, listGios, i, Common.keyDust, mChart, "Dust", "ug/m3");
             }
             @Override
             public void onNothingSelected(AdapterView<?> adapterView) {}
@@ -65,7 +65,7 @@ public class ActivityDust extends AppCompatActivity {
             public void run() {
                 runOnUiThread(() -> {
                     // lay data tu FireBase
-                    Common.updateNow(Common.keyDust, txtValue, "%");
+                    Common.updateNow(Common.keyDust, txtValue, "ug/m3");
                 });
             }
         },0, miliSecond);
