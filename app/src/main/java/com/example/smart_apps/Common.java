@@ -50,7 +50,6 @@ public class Common {
     public static final String keyDust = "dustDensity";
     public static final int backgroundChart = Color.WHITE; //parseColor("#B6DBD2");
     public static final int colorLine = Color.parseColor("#2B6C55");
-    public static final float maxValueTemp = 30;
     public static final float maxValueCO2 = 250;
     public static final float maxValueWalter = 100;
 
@@ -209,20 +208,19 @@ public class Common {
                                     Object ob1 = map.get(dataLabels.get(i));
                                     float value = 0;
 
-                                    // neu la String thi xu ly 1 kieu, con ngươi lai thi la double
-                                    if (ob1 instanceof String) {
-                                        value = Float.parseFloat((String) ob1);
-                                    } else {
-                                        double d = Double.parseDouble((String) ob1);
+                                    // neu la Long thi xu ly 1 kieu, con ngươi lai thi la String
+                                    if (ob1 instanceof Double) {
+                                        double d = (Double) ob1;
                                         value = (float) d;
+                                    } else if (ob1 instanceof Long) {
+                                        Long l = (Long) ob1;
+                                        value = (float) l;
+                                    }  else {
+                                        value = Float.parseFloat((String) ob1);
                                     }
 
                                     // gan lai mang de chuyen qua chart hien thi
                                     dataValuesFloat[i] = value;
-                                }
-
-                                for (Float s: dataValuesFloat) {
-                                    Log.e(TAG, "Value: " + s );
                                 }
                             } else {
                                 //truong hop nhan duoc arraylist
@@ -237,14 +235,16 @@ public class Common {
                                         } else {
                                             Object ob3 = listValue.get(j);
                                             double d = 0;
-                                            if (ob3 instanceof String) {
-                                                d = Double.parseDouble((String)listValue.get(j));
+
+                                            if (ob3 instanceof Double) {
+                                                d = (Double) listValue.get(j);
                                             } else if (ob3 instanceof Long) {
                                                 long l = (Long) listValue.get(j);
                                                 d = (double) l;
                                             } else {
-                                                d = (Double) listValue.get(j);
+                                                d = Double.parseDouble((String)listValue.get(j));
                                             }
+
                                             dataValuesFloat[j] = (float) d;
                                         }
                                         dataLabels.add(j + "");
@@ -292,8 +292,8 @@ public class Common {
                     public void onDataChange(@NonNull DataSnapshot snapshot) {
                         Object ob = snapshot.getValue();
 
-
                         float result = 0;
+
                         if (ob instanceof Double) {
                             double d = (Double) ob;
                             result = (float) d;
@@ -303,8 +303,6 @@ public class Common {
                         } else {
                             result = Float.parseFloat((String) ob);
                         }
-
-
 
                         txtValue.setText(result + " " + kyHieu);
 
