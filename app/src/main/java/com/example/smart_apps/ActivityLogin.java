@@ -14,7 +14,7 @@ import com.google.firebase.auth.FirebaseAuth;
 
 public class ActivityLogin extends AppCompatActivity {
     private EditText edtuser, edtpassword;
-    private TextView toast, mtcreat;
+    private TextView mtcreat;
     private Button btnlogin;
     private FirebaseAuth mAuth;
 
@@ -27,7 +27,6 @@ public class ActivityLogin extends AppCompatActivity {
         edtpassword = findViewById(R.id.password);
         mtcreat     = findViewById(R.id.mtcreate);
         btnlogin    = findViewById(R.id.btnlogin);
-        toast       = findViewById(R.id.toast);
         mAuth       = FirebaseAuth.getInstance();
 
         mtcreat.setOnClickListener(view -> startActivity(new Intent(getApplicationContext(), ActivityRegister.class)));

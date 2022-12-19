@@ -10,7 +10,7 @@ import android.widget.TextView;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 public class ActivityHome extends AppCompatActivity {
-    private ImageButton btndien,btnnuoc,btnmua;
+    private ImageButton btndien;
     private TextView txtdien,txtnuoc,txtmua ;
     private FloatingActionButton flthongtin,fthome;
 
@@ -20,8 +20,6 @@ public class ActivityHome extends AppCompatActivity {
         setContentView(R.layout.activity_home);
 
         btndien = findViewById(R.id.btndien);
-        btnmua = findViewById(R.id.btnmua);
-        btnnuoc = findViewById(R.id.btnnuoc);
         flthongtin = findViewById(R.id.flthongtin);
         fthome = findViewById(R.id.fthome);
         txtdien = findViewById(R.id.txtdien);
