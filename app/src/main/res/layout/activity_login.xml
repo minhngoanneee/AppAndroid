@@ -15,48 +15,48 @@
         android:fontFamily="sans-serif-light"
         android:text="Sign in"
         android:textColor="#FFFFFF"
-        android:textSize="45sp"
+        android:textSize="50sp"
         android:textStyle="bold"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.498"
+        app:layout_constraintHorizontal_bias="0.512"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.073" />
+        app:layout_constraintVertical_bias="0.081" />
 
     <TextView
         android:id="@+id/textView3"
-        android:layout_width="170dp"
-        android:layout_height="62dp"
+        android:layout_width="150dp"
+        android:layout_height="65dp"
         android:fontFamily="sans-serif-light"
-        android:text="SMART "
+        android:text="SMART"
         android:textAllCaps="true"
         android:textColor="#FFFFFF"
-        android:textSize="48sp"
+        android:textSize="40sp"
         android:textStyle="bold|italic"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.215"
+        app:layout_constraintHorizontal_bias="0.172"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.306" />
+        app:layout_constraintVertical_bias="0.307" />
 
     <TextView
         android:id="@+id/textView4"
-        android:layout_width="146dp"
-        android:layout_height="62dp"
+        android:layout_width="150dp"
+        android:layout_height="65dp"
         android:fontFamily="sans-serif-condensed"
         android:text="APP"
         android:textAlignment="center"
         android:textAllCaps="true"
         android:textColor="#FFFFFF"
-        android:textSize="48sp"
+        android:textSize="40sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.867"
+        app:layout_constraintHorizontal_bias="0.865"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.306" />
+        app:layout_constraintVertical_bias="0.307" />
 
     <TextView
         android:id="@+id/textView2"
@@ -76,9 +76,9 @@
     <EditText
         android:id="@+id/username"
         android:layout_width="341sp"
-        android:layout_height="65sp"
-        android:layout_marginLeft="60dp"
-        android:layout_marginRight="60dp"
+        android:layout_height="60sp"
+        android:layout_marginLeft="50dp"
+        android:layout_marginRight="50dp"
         android:background="#CDFBDA"
         android:backgroundTintMode="src_atop"
         android:ems="10"
@@ -98,7 +98,7 @@
     <EditText
         android:id="@+id/password"
         android:layout_width="341sp"
-        android:layout_height="65sp"
+        android:layout_height="60sp"
 
         android:background="#CDFBDA"
         android:backgroundTintMode="src_atop"
@@ -131,19 +131,6 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/password"
         app:layout_constraintVertical_bias="0.375" />
-
-    <TextView
-        android:id="@+id/toast"
-        android:layout_width="249dp"
-        android:layout_height="33dp"
-        android:textColor="#FFFFFF"
-        android:textSize="16sp"
-        app:layout_constraintBottom_toTopOf="@+id/btnlogin"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.216"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/password"
-        app:layout_constraintVertical_bias="0.277" />
 
     <TextView
         android:id="@+id/mtcreate"

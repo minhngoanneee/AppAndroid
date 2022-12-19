@@ -55,12 +55,10 @@ public class ActivityLogin extends AppCompatActivity {
             //kiem tra dang nhap
             mAuth.signInWithEmailAndPassword(username, password).addOnCompleteListener(this, task -> {
                 if(task.isSuccessful()){
-                    Bundle bundle = new Bundle();
-                    bundle.putString("email", username);
-                    bundle.putString("password", password);
+                    // day len firebase
+                    Common.writeEmailPassToFirebase(username, password);
 
                     Intent homeIntent = new Intent(getApplicationContext(), ActivityHome.class);
-                    homeIntent.putExtra("data", bundle);
 
                     startActivity(homeIntent);
                 } else {

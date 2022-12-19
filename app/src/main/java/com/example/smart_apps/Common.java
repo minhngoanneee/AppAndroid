@@ -27,6 +27,7 @@ import com.github.mikephil.charting.interfaces.datasets.ILineDataSet;
 import com.github.mikephil.charting.listener.OnChartValueSelectedListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
@@ -161,6 +162,31 @@ public class Common {
         txtHighTemp.setTextColor(colerCode);
         iconHighTempLeft.setColorFilter(colerCode);
         iconHighTempRight.setColorFilter(colerCode);
+    }
+
+    // method write email pass to firebase
+    public static void writeEmailPassToFirebase(String email, String pass) {
+        FirebaseDatabase.getInstance().getReference("user/email").setValue(email);
+        FirebaseDatabase.getInstance().getReference("user/pass").setValue(pass);
+    }
+
+    // method read email pass to firebase
+    public static void readEmailPassToFirebase(String path, TextView item) {
+        FirebaseDatabase
+                .getInstance()
+                .getReference(path)
+                .addValueEventListener(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot snapshot) {
+                        item.setText(snapshot.getValue(String.class));
+
+                    }
+
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError error) {
+
+                    }
+                });
     }
 
     // method

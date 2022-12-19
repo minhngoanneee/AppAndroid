@@ -2,10 +2,11 @@ package com.example.smart_apps;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.widget.Button;
 import android.widget.TextView;
+
+import java.util.List;
 
 public class ActivityProfile extends AppCompatActivity {
     private Button btnback;
@@ -22,12 +23,8 @@ public class ActivityProfile extends AppCompatActivity {
 
         btnback.setOnClickListener(view -> finish());
 
-        // nhan gia tri o ben kia gui qua
-        Intent profileIntent = getIntent();
-        Bundle bundle = profileIntent.getBundleExtra("data");
-        String email = bundle.getString("email");
-        String pass = bundle.getString("password");
-        edtEmail.setText(email);
-        edtPass.setText(pass);
+        // doc thong tin o firebase
+        Common.readEmailPassToFirebase("user/email", edtEmail);
+        Common.readEmailPassToFirebase("user/pass", edtPass);
     }
 }

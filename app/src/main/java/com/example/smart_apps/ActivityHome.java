@@ -31,11 +31,7 @@ public class ActivityHome extends AppCompatActivity {
         txtmua.setOnClickListener(view ->  startActivity(new Intent(getApplicationContext(), ActivityAir.class)));
 
         flthongtin.setOnClickListener(view -> {
-            // nhan gia tri o ben kia gui qua
-            Intent homeIntent = getIntent();
-            Bundle bundle = homeIntent.getBundleExtra("data");
             Intent intent = new Intent(getApplicationContext(), ActivityProfile.class);
-            intent.putExtra("data", bundle);
             startActivity(intent);
         });
 
