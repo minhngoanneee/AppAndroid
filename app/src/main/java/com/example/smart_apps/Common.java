@@ -27,7 +27,6 @@ import com.github.mikephil.charting.interfaces.datasets.ILineDataSet;
 import com.github.mikephil.charting.listener.OnChartValueSelectedListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
-import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
@@ -36,8 +35,6 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
-import io.grpc.internal.LogExceptionRunnable;
 
 public class Common {
 
@@ -114,7 +111,7 @@ public class Common {
                 try {
                     x = (int) value % xLabel.size();
                 } catch (ArithmeticException ex) {
-                    ex.printStackTrace();
+                    //ex.printStackTrace();
                     return "";
                 }
                 return xLabel.get(x);
@@ -179,7 +176,6 @@ public class Common {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot snapshot) {
                         item.setText(snapshot.getValue(String.class));
-
                     }
 
                     @Override

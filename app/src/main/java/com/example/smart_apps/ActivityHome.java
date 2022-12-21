@@ -35,7 +35,7 @@ public class ActivityHome extends AppCompatActivity {
             startActivity(intent);
         });
 
-        btndien.setOnClickListener(view -> startActivity(new Intent(ActivityHome.this, ActivityVoltage.class)));
+        btndien.setOnClickListener(view -> startActivity(new Intent(ActivityHome.this, ActivityElectricalHome.class)));
         fthome.setOnClickListener(view -> startActivity(new Intent(getApplicationContext(), ActivityLogin.class)));
     }
 }
