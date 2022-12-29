@@ -175,7 +175,8 @@ public class Common {
                 .addValueEventListener(new ValueEventListener() {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot snapshot) {
-                        item.setText(snapshot.getValue(String.class));
+                        String noiDung = snapshot.getValue(String.class);
+                        item.setText(noiDung);
                     }
 
                     @Override
@@ -193,6 +194,7 @@ public class Common {
         if (gioKieuInt > new Date().getHours()) {
             Toast.makeText(context, "Phải chọn giờ trước giờ hiện tại !!!", Toast.LENGTH_SHORT).show();
         } else {
+            // lay du lieu tren firebase ve de hien thi ra chart
             FirebaseDatabase
                     .getInstance()
                     .getReference(path + "/" + gio)
@@ -216,7 +218,7 @@ public class Common {
                                 dataLabels = new ArrayList<>(map.keySet());
                                 dataValuesFloat = new float[dataLabels.size()];
 
-                                // sap xep lai phut
+                                // sap xep lai phut, do luc lay tren firebase ve khong sap xep theo dung thu tu
                                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
                                     dataLabels.sort((key1, key2) -> {
                                         return key1.compareTo(key2);
@@ -226,8 +228,11 @@ public class Common {
                                 // lay gia tri ben map chuyen qua arrayfloat theo phut
                                 for (int i = 0; i < dataLabels.size(); i++) {
 
+                                    // lay nhan dau tien ra
+                                    String label = dataLabels.get(i);
+
                                     // lay tung doi tuong ra de xu lý
-                                    Object ob1 = map.get(dataLabels.get(i));
+                                    Object ob1 = map.get(label);
                                     float value = 0;
 
                                     // neu la Long thi xu ly 1 kieu, con ngươi lai thi la String
@@ -247,6 +252,8 @@ public class Common {
                             } else {
                                 //truong hop nhan duoc arraylist
                                 List<Object> listValue = (ArrayList<Object>) ob;
+
+                                // neu nhu co phut thi minh moi xu ly tiep, con chua co thi cho qua
                                 if (listValue != null) {
                                     dataValuesFloat = new float[listValue.size()];
 
@@ -255,6 +262,7 @@ public class Common {
                                         if (listValue.get(j) == null) {
                                             dataValuesFloat[j] = 0;
                                         } else {
+
                                             Object ob3 = listValue.get(j);
                                             double d = 0;
 
@@ -328,6 +336,7 @@ public class Common {
 
                         txtValue.setText(result + " " + kyHieu);
 
+                        // =====================
                         float soSanh = loai.equals("water") ? Common.maxValueWalter : Common.maxValueCO2;
 
                         if (result >= soSanh) {
@@ -355,13 +364,12 @@ public class Common {
                 .addValueEventListener(new ValueEventListener() {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot snapshot) {
-                        int index = 0;
+                        int phut = 0; // tương trưng cho phút ở trong list ở firebase lấy vế
                         for (DataSnapshot appleSnapshot : snapshot.getChildren()) {
-                            if (index > date.getMinutes()) {
-                                appleSnapshot.getRef().removeValue();
-                                Log.e(TAG, "onDataChange: " + appleSnapshot.getValue());
+                            if (phut > date.getMinutes()) {
+                                appleSnapshot.getRef().removeValue(); // xoa gia tri tai doi tuong dc tham chieu
                             }
-                            index++;
+                            phut++; // phut = phut + 1
                         }
                     }
                     @Override

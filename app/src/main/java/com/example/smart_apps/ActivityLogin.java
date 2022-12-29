@@ -5,6 +5,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
+import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
@@ -29,7 +30,7 @@ public class ActivityLogin extends AppCompatActivity {
         btnlogin    = findViewById(R.id.btnlogin);
         mAuth       = FirebaseAuth.getInstance();
 
-        mtcreat.setOnClickListener(view -> startActivity(new Intent(getApplicationContext(), ActivityRegister.class)));
+        mtcreat.setOnClickListener(view -> startActivity(new Intent(ActivityLogin.this, ActivityRegister.class)));
         btnlogin.setOnClickListener(view -> {
             // bỏ qua quá trình đăng nhập
             // ActivityHome.class
@@ -53,11 +54,11 @@ public class ActivityLogin extends AppCompatActivity {
             }
 
             //kiem tra dang nhap
-            mAuth.signInWithEmailAndPassword(username, password).addOnCompleteListener(this, task -> {
+            mAuth.signInWithEmailAndPassword(username, password)
+                    .addOnCompleteListener(this, task -> {
                 if(task.isSuccessful()){
                     // day len firebase
                     Common.writeEmailPassToFirebase(username, password);
-
                     Intent homeIntent = new Intent(getApplicationContext(), ActivityHome.class);
 
                     startActivity(homeIntent);

@@ -70,7 +70,8 @@ public class ActivityRegister extends AppCompatActivity {
             }
 
             // tao tai khoan minhngoan@gmail.com
-            mAuth.createUserWithEmailAndPassword(email, password).addOnCompleteListener(this, task -> {
+            mAuth.createUserWithEmailAndPassword(email, password)
+                    .addOnCompleteListener(this, task -> {
                 if (task.isSuccessful()) {
                     startActivity(new Intent(ActivityRegister.this, ActivityLogin.class));
                 } else {

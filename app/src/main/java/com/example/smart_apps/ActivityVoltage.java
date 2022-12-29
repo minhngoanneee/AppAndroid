@@ -42,7 +42,7 @@ public class ActivityVoltage extends AppCompatActivity {
 
         // tao mang de hien thi len spinner
         String[] listGios = Common.initValueSpinner();
-        ArrayAdapter<String> adapter = Common.initAdaper(this, listGios);
+        ArrayAdapter<String> adapter = Common.initAdaper(ActivityVoltage.this, listGios);
 
         spinner.setAdapter(adapter);
         spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
